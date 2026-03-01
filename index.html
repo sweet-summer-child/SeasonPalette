@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Season Palette Finder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <div id="camera-container">
+            <video id="camera" autoplay playsinline></video>
+            <canvas id="overlay"></canvas>
+        </div>
+
+        <div id="controls">
+            <div id="palette-selector">
+                <button class="palette-btn active" data-palette="deep-winter">Deep Winter</button>
+                <button class="palette-btn" data-palette="cool-winter">Cool Winter</button>
+                <button class="palette-btn" data-palette="cool-summer">Cool Summer</button>
+                <button class="palette-btn" data-palette="soft-summer">Soft Summer</button>
+                <button class="palette-btn" data-palette="soft-autumn">Soft Autumn</button>
+                <button class="palette-btn" data-palette="warm-autumn">Warm Autumn</button>
+                <button class="palette-btn" data-palette="warm-spring">Warm Spring</button>
+                <button class="palette-btn" data-palette="clear-spring">Clear Spring</button>
+            </div>
+            
+            <div id="action-buttons">
+                <button id="toggle-camera" class="action-btn">Switch Camera</button>
+                <button id="capture" class="action-btn primary">Capture</button>
+            </div>
+        </div>
+
+        <div id="color-swatches"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
