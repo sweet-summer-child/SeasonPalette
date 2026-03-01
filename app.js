@@ -17,40 +17,52 @@ const palettes = {
         '#2F4F4F', '#4682B4', '#B8860B', '#8A2BE2', '#1E90FF'
     ],
     'deep-winter-lights-brights': [
-        '#FFFFFF', '#F5F5F5', '#E0E0E0', '#FF1493', '#FF00FF',
-        '#DA70D6', '#FF69B4', '#4169E1', '#1E90FF', '#4682B4',
-        '#DC143C', '#CD5C5C', '#C71585', '#8A2BE2', '#00BFFF',
-        '#87CEEB', '#B0E0E6', '#FFB6C1', '#FFC0CB', '#E6E6FA',
-        '#D8BFD8', '#DDA0DD', '#F0F8FF', '#AFEEEE', '#ADD8E6',
-        '#87CEFA', '#B0C4DE', '#C0C0C0', '#DCDCDC', '#F5F5F5',
-        '#FFE4E1', '#FFF0F5', '#F8F8FF', '#FFFAFA', '#F0FFFF'
+        // Icy whites and light grays
+        '#FFFFFF', '#F5F5F5', '#F8F8FF', '#FFFAFA', '#F0FFFF',
+        '#E0E0E0', '#F0F8FF', '#DCDCDC', '#C0C0C0', '#E6E6FA',
+        // Bright pinks and magentas
+        '#FF1493', '#FF00FF', '#FF69B4', '#DA70D6', '#FFB6C1',
+        '#FFC0CB', '#FFE4E1', '#FFF0F5', '#C71585', '#DDA0DD',
+        // Bright blues
+        '#4169E1', '#1E90FF', '#4682B4', '#00BFFF', '#87CEEB',
+        '#B0E0E6', '#87CEFA', '#B0C4DE', '#ADD8E6', '#AFEEEE',
+        // Bright reds and purples
+        '#DC143C', '#CD5C5C', '#8A2BE2', '#D8BFD8', '#F0F8FF'
     ],
     'deep-winter-deeps': [
-        '#8B0000', '#A52A2A', '#B22222', '#DC143C', '#00008B',
-        '#000080', '#0000CD', '#4B0082', '#483D8B', '#6A5ACD',
-        '#8B008B', '#9400D3', '#4169E1', '#191970', '#2F4F4F',
-        '#8B4513', '#A0522D', '#800000', '#8B0000', '#B8860B',
-        '#CD5C5C', '#C71585', '#8A2BE2', '#6A5ACD', '#4682B4',
-        '#5F9EA0', '#2F4F4F', '#708090', '#483D8B', '#191970',
-        '#000080', '#00008B', '#0000CD', '#4B0082', '#8B008B'
+        // Deep blacks and navies
+        '#000080', '#00008B', '#0000CD', '#191970', '#4B0082',
+        '#483D8B', '#2F4F4F', '#708090', '#5F9EA0', '#36454F',
+        // Deep reds and burgundies
+        '#8B0000', '#A52A2A', '#B22222', '#DC143C', '#800000',
+        '#CD5C5C', '#C71585', '#8B4513', '#A0522D', '#B8860B',
+        // Deep purples and blues
+        '#8B008B', '#9400D3', '#6A5ACD', '#4169E1', '#4682B4',
+        '#8A2BE2', '#6A5ACD', '#483D8B', '#191970', '#000080'
     ],
     'deep-winter-dark-neutrals': [
-        '#000000', '#1C1C1C', '#1E1E1E', '#2F4F4F', '#191970',
-        '#36454F', '#28282B', '#3B3B3B', '#414141', '#454545',
-        '#4A4A4A', '#505050', '#555555', '#5A5A5A', '#696969',
-        '#708090', '#778899', '#2F4F4F', '#36454F', '#3C3C3C',
-        '#434343', '#4D4D4D', '#595959', '#666666', '#737373',
-        '#808080', '#8B8B8B', '#A9A9A9', '#BEBEBE', '#C0C0C0',
-        '#D3D3D3', '#DCDCDC', '#E0E0E0', '#E8E8E8', '#F5F5F5'
+        // Pure blacks to dark grays
+        '#000000', '#1C1C1C', '#1E1E1E', '#28282B', '#36454F',
+        '#3B3B3B', '#414141', '#454545', '#4A4A4A', '#505050',
+        // Medium dark grays
+        '#555555', '#5A5A5A', '#696969', '#708090', '#778899',
+        '#2F4F4F', '#36454F', '#3C3C3C', '#434343', '#4D4D4D',
+        // Light grays
+        '#595959', '#666666', '#737373', '#808080', '#8B8B8B',
+        '#A9A9A9', '#BEBEBE', '#C0C0C0', '#D3D3D3', '#DCDCDC',
+        '#E0E0E0', '#E8E8E8', '#F5F5F5', '#191970', '#2F4F4F'
     ],
     'deep-winter-mids': [
-        '#708090', '#778899', '#4682B4', '#5F9EA0', '#6A5ACD',
-        '#9370DB', '#8B008B', '#BA55D3', '#DA70D6', '#C71585',
+        // Medium grays and blues
+        '#708090', '#778899', '#5F9EA0', '#4682B4', '#A9A9A9',
+        '#C0C0C0', '#B0C4DE', '#87CEEB', '#87CEFA', '#B0E0E6',
+        // Medium purples and pinks
+        '#6A5ACD', '#9370DB', '#BA55D3', '#DA70D6', '#C71585',
+        '#8B008B', '#8A2BE2', '#DDA0DD', '#AFEEEE', '#ADD8E6',
+        // Medium reds and earth tones
         '#CD5C5C', '#B22222', '#DC143C', '#4169E1', '#1E90FF',
-        '#87CEEB', '#B0C4DE', '#9370DB', '#8A2BE2', '#6A5ACD',
-        '#A9A9A9', '#C0C0C0', '#BC8F8F', '#CD853F', '#D2691E',
-        '#B8860B', '#DAA520', '#BDB76B', '#8FBC8F', '#90EE90',
-        '#98FB98', '#AFEEEE', '#87CEFA', '#B0E0E6', '#ADD8E6'
+        '#BC8F8F', '#CD853F', '#D2691E', '#B8860B', '#DAA520',
+        '#BDB76B', '#8FBC8F', '#90EE90', '#98FB98', '#9370DB'
     ],
     'cool-winter-general': [
         // Dark grays and charcoals
