@@ -101,7 +101,7 @@ body {
 /* iOS-style capture button */
 #capture-button {
     position: fixed;
-    bottom: 100px;
+    bottom: 120px;
     left: 50%;
     transform: translateX(-50%);
     width: 60px;
@@ -132,6 +132,36 @@ body {
     border: 2px solid #000;
 }
 
+/* Camera switch button */
+#switch-camera-button {
+    position: fixed;
+    bottom: 130px;
+    right: 30px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+#switch-camera-button:active {
+    transform: scale(0.9);
+    background: rgba(0, 0, 0, 0.7);
+}
+
+#switch-camera-button svg {
+    width: 28px;
+    height: 28px;
+}
+
 #action-buttons {
     display: none;
 }
@@ -142,9 +172,9 @@ body {
 
 .subcategory-menu {
     position: fixed;
-    bottom: 200px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
     background: rgba(249, 249, 249, 0.94);
     border-radius: 13px;
     padding: 0;
@@ -154,18 +184,18 @@ body {
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
     min-width: 250px;
     max-width: 90vw;
-    animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: popIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
 }
 
-@keyframes slideUp {
+@keyframes popIn {
     from {
         opacity: 0;
-        transform: translateX(-50%) translateY(30px) scale(0.95);
+        transform: translate(-50%, -50%) scale(0.9);
     }
     to {
         opacity: 1;
-        transform: translateX(-50%) translateY(0) scale(1);
+        transform: translate(-50%, -50%) scale(1);
     }
 }
 
