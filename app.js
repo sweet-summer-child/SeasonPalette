@@ -179,8 +179,8 @@ function drawOverlay() {
     const rows = Math.ceil(colors.length / cols);
     
     // Maximize screen usage - account for controls at bottom
-    const availableWidth = overlay.width * 0.98; // Use 98% of width
-    const availableHeight = overlay.height * 0.92; // Use 92% of height (leave room for controls)
+    const availableWidth = overlay.width * 0.75; // Use 75% of width
+    const availableHeight = overlay.height * 0.70; // Use 70% of height (leave room for controls)
     
     // Calculate optimal circle size to fill the space
     const horizontalSpacing = availableWidth * 0.02; // 2% of width for spacing
@@ -207,11 +207,6 @@ function drawOverlay() {
         ctx.beginPath();
         ctx.arc(x, y, swatchSize / 2, 0, Math.PI * 2);
         ctx.fill();
-        
-        // Draw border
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
-        ctx.lineWidth = Math.max(2.5, swatchSize * 0.035);
-        ctx.stroke();
     });
 }
 
