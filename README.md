@@ -1,4 +1,4 @@
-# Season Palette Finder
+# Season Palette
 
 A mobile web app for determining color season palettes using your phone's camera.
 
