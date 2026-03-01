@@ -101,7 +101,7 @@ body {
 /* iOS-style capture button */
 #capture-button {
     position: fixed;
-    bottom: 120px;
+    bottom: 90px;
     left: 50%;
     transform: translateX(-50%);
     width: 60px;
@@ -135,7 +135,7 @@ body {
 /* Camera switch button */
 #switch-camera-button {
     position: fixed;
-    bottom: 130px;
+    bottom: 100px;
     right: 30px;
     width: 44px;
     height: 44px;
