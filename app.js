@@ -458,42 +458,63 @@ async function initCamera() {
 
 // Draw color swatches overlay - optimized for iPhone display
 function drawOverlay() {
+    // Ensure canvas matches video dimensions
+    if (overlay.width !== video.videoWidth || overlay.height !== video.videoHeight) {
+        overlay.width = video.videoWidth;
+        overlay.height = video.videoHeight;
+    }
+    
     ctx.clearRect(0, 0, overlay.width, overlay.height);
     
     const colors = palettes[currentPalette];
+    if (!colors) return;
     
     // Fixed 5 columns layout
     const cols = 5;
     const rows = Math.ceil(colors.length / cols);
     
-    // Maximize screen usage - account for controls at bottom
-    const availableWidth = overlay.width * 0.75; // Use 75% of width
-    const availableHeight = overlay.height * 0.70; // Use 70% of height (leave room for controls)
+    // Use viewport dimensions for consistent sizing
+    const viewportWidth = overlay.width;
+    const viewportHeight = overlay.height;
     
-    // Calculate optimal circle size to fill the space
-    const horizontalSpacing = availableWidth * 0.02; // 2% of width for spacing
-    const verticalSpacing = availableHeight * 0.015; // 1.5% of height for spacing
+    // Calculate available space
+    const availableWidth = viewportWidth * 0.75;
+    const availableHeight = viewportHeight * 0.70;
     
+    // Calculate spacing as fixed percentage
+    const horizontalSpacing = availableWidth * 0.02;
+    const verticalSpacing = availableHeight * 0.015;
+    
+    // Calculate circle size ensuring they fit properly
     const swatchSizeByWidth = (availableWidth - (cols - 1) * horizontalSpacing) / cols;
     const swatchSizeByHeight = (availableHeight - (rows - 1) * verticalSpacing) / rows;
     const swatchSize = Math.min(swatchSizeByWidth, swatchSizeByHeight);
     
-    const totalWidth = cols * swatchSize + (cols - 1) * horizontalSpacing;
-    const totalHeight = rows * swatchSize + (rows - 1) * verticalSpacing;
+    // Ensure minimum size for visibility
+    const finalSwatchSize = Math.max(swatchSize, 20);
     
-    const startX = (overlay.width - totalWidth) / 2;
-    const startY = (overlay.height - totalHeight) / 2;
+    const totalWidth = cols * finalSwatchSize + (cols - 1) * horizontalSpacing;
+    const totalHeight = rows * finalSwatchSize + (rows - 1) * verticalSpacing;
+    
+    const startX = (viewportWidth - totalWidth) / 2;
+    const startY = (viewportHeight - totalHeight) / 2;
+    
+    // Draw circles with anti-aliasing
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
     
     colors.forEach((color, index) => {
         const row = Math.floor(index / cols);
         const col = index % cols;
-        const x = startX + col * (swatchSize + horizontalSpacing) + swatchSize / 2;
-        const y = startY + row * (swatchSize + verticalSpacing) + swatchSize / 2;
+        const centerX = startX + col * (finalSwatchSize + horizontalSpacing) + finalSwatchSize / 2;
+        const centerY = startY + row * (finalSwatchSize + verticalSpacing) + finalSwatchSize / 2;
+        const radius = finalSwatchSize / 2;
         
-        // Draw swatch circle
+        // Draw perfect circle
         ctx.fillStyle = color;
         ctx.beginPath();
-        ctx.arc(x, y, swatchSize / 2, 0, Math.PI * 2);
+        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, false);
+        ctx.closePath();
         ctx.fill();
     });
 }
