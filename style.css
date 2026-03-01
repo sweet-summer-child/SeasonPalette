@@ -104,4 +104,57 @@ body {
     transform: scale(0.95);
 }
 
+.subcategory-menu {
+    position: fixed;
+    bottom: 180px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.95);
+    border-radius: 16px;
+    padding: 12px;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+    min-width: 200px;
+    max-width: 90vw;
+    animation: slideUp 0.2s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.subcategory-option {
+    display: block;
+    width: 100%;
+    padding: 14px 20px;
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-size: 15px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.2s;
+    margin: 4px 0;
+    font-weight: 500;
+}
+
+.subcategory-option:hover,
+.subcategory-option:active {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.subcategory-option.active {
+    background: #007AFF;
+    font-weight: 600;
+}
+
 
