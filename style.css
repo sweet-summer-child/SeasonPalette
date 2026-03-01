@@ -47,6 +47,7 @@ body {
     width: 100%;
     height: 100%;
     pointer-events: none;
+    image-rendering: auto;
 }
 
 #controls {
@@ -61,7 +62,7 @@ body {
     display: flex;
     gap: 8px;
     overflow-x: auto;
-    padding-bottom: 8px;
+    padding-bottom: 0;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     scroll-behavior: smooth;
@@ -92,40 +93,51 @@ body {
 }
 
 .palette-btn.active {
-    background: rgba(0, 0, 0, 0.08);
-    color: #000;
+    background: #007AFF;
+    color: #fff;
     font-weight: 600;
+}
+
+/* iOS-style capture button */
+#capture-button {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+#capture-button:active {
+    transform: translateX(-50%) scale(0.9);
+}
+
+#capture-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #000;
 }
 
 #action-buttons {
-    display: flex;
-    gap: 12px;
-    margin-top: 12px;
+    display: none;
 }
 
 .action-btn {
-    flex: 1;
-    padding: 13px;
-    border: none;
-    border-radius: 12px;
-    font-size: 17px;
-    font-weight: 600;
-    cursor: pointer;
-    background: rgba(118, 118, 128, 0.12);
-    color: #000;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    letter-spacing: -0.41px;
-}
-
-.action-btn.primary {
-    background: #007AFF;
-    color: #fff;
-}
-
-.action-btn:active {
-    transform: scale(0.96);
-    opacity: 0.8;
-    transition: transform 0.1s, opacity 0.1s;
+    display: none;
 }
 
 .subcategory-menu {

@@ -422,6 +422,51 @@ let facingMode = 'user'; // Start with front camera
 let longPressTimer = null;
 let isLongPress = false;
 
+// Audio context for sound effects
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+// Create iOS-style click sound
+function playClickSound() {
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.value = 1000;
+    oscillator.type = 'sine';
+    
+    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.05);
+}
+
+// Create iOS-style camera shutter sound
+function playShutterSound() {
+    const oscillator1 = audioContext.createOscillator();
+    const oscillator2 = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator1.connect(gainNode);
+    oscillator2.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator1.frequency.value = 800;
+    oscillator2.frequency.value = 1200;
+    oscillator1.type = 'sine';
+    oscillator2.type = 'sine';
+    
+    gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+    
+    oscillator1.start(audioContext.currentTime);
+    oscillator2.start(audioContext.currentTime);
+    oscillator1.stop(audioContext.currentTime + 0.1);
+    oscillator2.stop(audioContext.currentTime + 0.1);
+}
+
 const video = document.getElementById('camera');
 const overlay = document.getElementById('overlay');
 const ctx = overlay.getContext('2d');
@@ -446,10 +491,7 @@ async function initCamera() {
         video.srcObject = stream;
         
         video.onloadedmetadata = () => {
-            // Set canvas internal resolution to match video
-            overlay.width = video.videoWidth;
-            overlay.height = video.videoHeight;
-            
+            resizeCanvas();
             drawOverlay();
         };
     } catch (error) {
@@ -458,45 +500,66 @@ async function initCamera() {
     }
 }
 
+// Resize canvas to match display size for perfect circles
+function resizeCanvas() {
+    const container = document.getElementById('camera-container');
+    const displayWidth = container.offsetWidth;
+    const displayHeight = container.offsetHeight;
+    
+    // Set canvas internal resolution to match display size exactly
+    const dpr = window.devicePixelRatio || 1;
+    overlay.width = displayWidth * dpr;
+    overlay.height = displayHeight * dpr;
+    
+    // Set canvas CSS size
+    overlay.style.width = displayWidth + 'px';
+    overlay.style.height = displayHeight + 'px';
+    
+    // Scale context to account for device pixel ratio
+    ctx.scale(dpr, dpr);
+}
+
 // Draw color swatches overlay - optimized for iPhone display
 function drawOverlay() {
-    // Ensure canvas matches video dimensions
-    if (overlay.width !== video.videoWidth || overlay.height !== video.videoHeight) {
-        overlay.width = video.videoWidth;
-        overlay.height = video.videoHeight;
-    }
+    // Get display dimensions
+    const container = document.getElementById('camera-container');
+    const displayWidth = container.offsetWidth;
+    const displayHeight = container.offsetHeight;
     
-    ctx.clearRect(0, 0, overlay.width, overlay.height);
+    ctx.save(); // Save context state
+    ctx.clearRect(0, 0, displayWidth, displayHeight);
     
     const colors = palettes[currentPalette];
-    if (!colors) return;
+    if (!colors) {
+        ctx.restore();
+        return;
+    }
     
     // Fixed 5 columns layout
     const cols = 5;
     const rows = Math.ceil(colors.length / cols);
     
-    // Use viewport dimensions for consistent sizing
-    const viewportWidth = overlay.width;
-    const viewportHeight = overlay.height;
+    // Use display dimensions for consistent sizing
+    const viewportWidth = displayWidth;
+    const viewportHeight = displayHeight;
     
-    // Calculate available space
-    const availableWidth = viewportWidth * 0.75;
-    const availableHeight = viewportHeight * 0.70;
+    // Calculate available space - maximize screen but leave room for capture button
+    const availableWidth = viewportWidth * 0.85;
+    const availableHeight = viewportHeight * 0.65; // Reduced to avoid capture button
     
-    // Calculate spacing as fixed percentage
-    const horizontalSpacing = availableWidth * 0.02;
-    const verticalSpacing = availableHeight * 0.015;
+    // Calculate uniform spacing
+    const spacing = Math.min(availableWidth, availableHeight) * 0.03; // Uniform spacing
     
     // Calculate circle size ensuring they fit properly
-    const swatchSizeByWidth = (availableWidth - (cols - 1) * horizontalSpacing) / cols;
-    const swatchSizeByHeight = (availableHeight - (rows - 1) * verticalSpacing) / rows;
+    const swatchSizeByWidth = (availableWidth - (cols - 1) * spacing) / cols;
+    const swatchSizeByHeight = (availableHeight - (rows - 1) * spacing) / rows;
     const swatchSize = Math.min(swatchSizeByWidth, swatchSizeByHeight);
     
     // Ensure minimum size for visibility
     const finalSwatchSize = Math.max(swatchSize, 20);
     
-    const totalWidth = cols * finalSwatchSize + (cols - 1) * horizontalSpacing;
-    const totalHeight = rows * finalSwatchSize + (rows - 1) * verticalSpacing;
+    const totalWidth = cols * finalSwatchSize + (cols - 1) * spacing;
+    const totalHeight = rows * finalSwatchSize + (rows - 1) * spacing;
     
     const startX = (viewportWidth - totalWidth) / 2;
     const startY = (viewportHeight - totalHeight) / 2;
@@ -508,8 +571,8 @@ function drawOverlay() {
     colors.forEach((color, index) => {
         const row = Math.floor(index / cols);
         const col = index % cols;
-        const centerX = startX + col * (finalSwatchSize + horizontalSpacing) + finalSwatchSize / 2;
-        const centerY = startY + row * (finalSwatchSize + verticalSpacing) + finalSwatchSize / 2;
+        const centerX = startX + col * (finalSwatchSize + spacing) + finalSwatchSize / 2;
+        const centerY = startY + row * (finalSwatchSize + spacing) + finalSwatchSize / 2;
         const radius = finalSwatchSize / 2;
         
         // Draw perfect circle
@@ -519,6 +582,8 @@ function drawOverlay() {
         ctx.closePath();
         ctx.fill();
     });
+    
+    ctx.restore(); // Restore context state
 }
 
 
@@ -546,6 +611,7 @@ function showSubcategoryMenu(season, btnElement) {
         }
         option.addEventListener('click', (e) => {
             e.stopPropagation();
+            playClickSound(); // Play sound
             currentSeason = season;
             currentSubcategory = sub;
             currentPalette = `${season}-${sub}`;
@@ -578,12 +644,15 @@ function showSubcategoryMenu(season, btnElement) {
 // Palette button handlers with long press
 document.querySelectorAll('.palette-btn').forEach(btn => {
     const season = btn.dataset.palette;
+    let touchHandled = false;
     
     // Touch events for mobile
     btn.addEventListener('touchstart', (e) => {
+        touchHandled = false;
         isLongPress = false;
         longPressTimer = setTimeout(() => {
             isLongPress = true;
+            touchHandled = true;
             navigator.vibrate && navigator.vibrate(50); // Haptic feedback
             showSubcategoryMenu(season, btn);
         }, 500); // 500ms for long press
@@ -591,7 +660,10 @@ document.querySelectorAll('.palette-btn').forEach(btn => {
     
     btn.addEventListener('touchend', (e) => {
         clearTimeout(longPressTimer);
-        if (!isLongPress) {
+        if (!isLongPress && !touchHandled) {
+            e.preventDefault(); // Prevent click event
+            touchHandled = true;
+            playClickSound(); // Play sound
             // Regular tap
             document.querySelectorAll('.palette-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -600,14 +672,21 @@ document.querySelectorAll('.palette-btn').forEach(btn => {
             currentPalette = `${season}-general`;
             drawOverlay();
         }
+        // Reset after a short delay
+        setTimeout(() => {
+            touchHandled = false;
+            isLongPress = false;
+        }, 100);
     });
     
     btn.addEventListener('touchcancel', () => {
         clearTimeout(longPressTimer);
+        touchHandled = false;
+        isLongPress = false;
     });
     
     // Mouse events for desktop
-    btn.addEventListener('mousedown', () => {
+    btn.addEventListener('mousedown', (e) => {
         isLongPress = false;
         longPressTimer = setTimeout(() => {
             isLongPress = true;
@@ -623,8 +702,9 @@ document.querySelectorAll('.palette-btn').forEach(btn => {
         clearTimeout(longPressTimer);
     });
     
-    btn.addEventListener('click', () => {
-        if (!isLongPress) {
+    btn.addEventListener('click', (e) => {
+        if (!isLongPress && !touchHandled) {
+            playClickSound(); // Play sound
             document.querySelectorAll('.palette-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             currentSeason = season;
@@ -632,17 +712,17 @@ document.querySelectorAll('.palette-btn').forEach(btn => {
             currentPalette = `${season}-general`;
             drawOverlay();
         }
+        isLongPress = false; // Reset after click
     });
 });
 
-// Toggle camera (front/back)
-document.getElementById('toggle-camera').addEventListener('click', () => {
-    facingMode = facingMode === 'user' ? 'environment' : 'user';
-    initCamera();
-});
+// Initialize app
+initCamera();
 
-// Capture photo
-document.getElementById('capture').addEventListener('click', () => {
+// Capture photo with iOS-style button
+document.getElementById('capture-button').addEventListener('click', () => {
+    playShutterSound(); // Play shutter sound
+    
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
@@ -651,8 +731,53 @@ document.getElementById('capture').addEventListener('click', () => {
     // Draw video frame
     captureCtx.drawImage(video, 0, 0);
     
-    // Draw overlay
-    captureCtx.drawImage(overlay, 0, 0);
+    // Redraw overlay at high resolution for capture
+    const tempOverlay = document.createElement('canvas');
+    tempOverlay.width = video.videoWidth;
+    tempOverlay.height = video.videoHeight;
+    const tempCtx = tempOverlay.getContext('2d');
+    
+    const colors = palettes[currentPalette];
+    if (!colors) return;
+    
+    const cols = 5;
+    const rows = Math.ceil(colors.length / cols);
+    
+    const availableWidth = tempOverlay.width * 0.85;
+    const availableHeight = tempOverlay.height * 0.65;
+    
+    const spacing = Math.min(availableWidth, availableHeight) * 0.03; // Uniform spacing
+    
+    const swatchSizeByWidth = (availableWidth - (cols - 1) * spacing) / cols;
+    const swatchSizeByHeight = (availableHeight - (rows - 1) * spacing) / rows;
+    const swatchSize = Math.min(swatchSizeByWidth, swatchSizeByHeight);
+    const finalSwatchSize = Math.max(swatchSize, 20);
+    
+    const totalWidth = cols * finalSwatchSize + (cols - 1) * spacing;
+    const totalHeight = rows * finalSwatchSize + (rows - 1) * spacing;
+    
+    const startX = (tempOverlay.width - totalWidth) / 2;
+    const startY = (tempOverlay.height - totalHeight) / 2;
+    
+    tempCtx.imageSmoothingEnabled = true;
+    tempCtx.imageSmoothingQuality = 'high';
+    
+    colors.forEach((color, index) => {
+        const row = Math.floor(index / cols);
+        const col = index % cols;
+        const centerX = startX + col * (finalSwatchSize + spacing) + finalSwatchSize / 2;
+        const centerY = startY + row * (finalSwatchSize + spacing) + finalSwatchSize / 2;
+        const radius = finalSwatchSize / 2;
+        
+        tempCtx.fillStyle = color;
+        tempCtx.beginPath();
+        tempCtx.arc(centerX, centerY, radius, 0, Math.PI * 2, false);
+        tempCtx.closePath();
+        tempCtx.fill();
+    });
+    
+    // Draw high-res overlay on capture
+    captureCtx.drawImage(tempOverlay, 0, 0);
     
     // Download image
     canvas.toBlob(blob => {
@@ -665,14 +790,8 @@ document.getElementById('capture').addEventListener('click', () => {
     }, 'image/jpeg', 0.95);
 });
 
-// Initialize app
-initCamera();
-
 // Handle orientation changes
 window.addEventListener('resize', () => {
-    if (video.videoWidth && video.videoHeight) {
-        overlay.width = video.videoWidth;
-        overlay.height = video.videoHeight;
-        drawOverlay();
-    }
+    resizeCanvas();
+    drawOverlay();
 });
