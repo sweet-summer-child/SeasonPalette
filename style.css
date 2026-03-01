@@ -104,32 +104,4 @@ body {
     transform: scale(0.95);
 }
 
-#color-swatches {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 6px;
-    padding: 10px 16px;
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
-    max-width: 90vw;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-}
 
-#color-swatches::-webkit-scrollbar {
-    display: none;
-}
-
-.color-swatch {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    flex-shrink: 0;
-}
