@@ -446,8 +446,10 @@ async function initCamera() {
         video.srcObject = stream;
         
         video.onloadedmetadata = () => {
+            // Set canvas internal resolution to match video
             overlay.width = video.videoWidth;
             overlay.height = video.videoHeight;
+            
             drawOverlay();
         };
     } catch (error) {
